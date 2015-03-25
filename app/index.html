@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="app.min.css">
+    <style>
+      /* TODO */
+	  .app-button:hover {
+		cursor: pointer;
+	  }
+	  .app-button:active {
+		background-color: #eee;
+	  }
+    </style>
+  </head>
+
+  <body>
+    <div class="app-page" data-page="home">
+      <div class="app-topbar">
+        <div class="app-title">Home</div>
+      </div>
+      <div class="app-content">
+		<div class="devices">
+			<div class="app-section device">			
+				<div class="app-button" data-url="" data-target="device">Go to device</div>
+			</div>
+        </div>
+      </div>
+    </div>
+
+	<div class="app-page" data-page="device">
+      <div class="app-topbar">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Device: Lamp 1</div>
+      </div>
+      <div class="app-content">
+		<div class="app-section">
+			<div class="app-button">On/Off</div>
+		</div>
+      </div>
+    </div>
+	
+	
+	
+    <script src="zepto.js"></script>
+    <script src="app.min.js"></script>
+    <script>
+      App.controller('home', function (page) {
+
+		$.getJSON('http://192.168.2.11:3000', function(devices){
+
+			var $template = $(page).find('.device').remove();
+			var $devices = $(page).find('.devices');
+			devices.forEach(function (device) {
+				
+				var parts = device.route.split('/');
+				//if(parts.length==1) {
+					//Add device
+				//} else {
+					//Add group
+				//}
+				
+				var $device = $template.clone(true);
+				$device.children('.app-button').html(parts.join(' '));
+				$device.children('.app-button').data('url','http://'+device.ip+':'+device.port+'/'+device.route);
+				$devices.append($device);
+			});
+			$('.app-button').click(function() {
+				$.post($(this).data('url'), { toggle: 1 }, function(response){
+				  // process response
+				});
+			});
+		});
+
+      });
+
+	  App.controller('device', function (page) {
+        // put stuff here
+      });
+	  
+      try {
+        App.restore();
+      } catch (err) {
+        App.load('home');
+      }
+    </script>
+  </body>
+</html>
