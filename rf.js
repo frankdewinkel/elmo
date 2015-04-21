@@ -8,7 +8,7 @@ var lamp1 = false;
 var lamp2 = false;
 var lamp3 = false;
 
-client.add('woonkamer/lamp1',function() {	
+client.add('woonkamer/lamp1','lamp',function() {	
 	return 'Staat: ' + lamp1 + '<form method="post"><input type="submit" value="Schakelen" /></form>';	
 },function() {	
 	if(lamp1) {
@@ -19,7 +19,7 @@ client.add('woonkamer/lamp1',function() {
 	lamp1 = !lamp1;	
 	return 'Staat: ' +lamp1 + '<form method="post"><input type="submit" value="Schakelen" /></form>';	
 });
-client.add('woonkamer/lamp2',function() {	
+client.add('woonkamer/lamp2','lamp',function() {	
 	return 'Staat: ' + lamp2 + '<form method="post"><input type="submit" value="Schakelen" /></form>';	
 },function() {	
 	if(lamp2) {
@@ -30,7 +30,7 @@ client.add('woonkamer/lamp2',function() {
 	lamp2 = !lamp2;	
 	return 'Staat: ' +lamp2 + '<form method="post"><input type="submit" value="Schakelen" /></form>';	
 });
-client.add('woonkamer/lamp3',function() {	
+client.add('woonkamer/lamp3','lamp',function() {	
 	return 'Staat: ' + lamp3 + '<form method="post"><input type="submit" value="Schakelen" /></form>';	
 },function() {	
 	if(lamp3) {

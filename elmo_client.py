@@ -1,8 +1,9 @@
 import time
 import BaseHTTPServer
 import httplib, urllib
+import json
 
-ELMO_IP 	= '192.168.2.11'
+ELMO_IP 	= 'localhost'
 ELMO_PORT 	= 3333
 ELMO_ROUTES = []
 
@@ -31,15 +32,15 @@ class ELMO_HANDLER(BaseHTTPServer.BaseHTTPRequestHandler):
 				response += ELMO_ROUTE["post"]()		
 		self.wfile.write(response)
 		
-def add(route,get,post):
-	ELMO_ROUTES.append({"route" : route, "get" : get, "post" : post})
+def add(route,type,get,post):
+	ELMO_ROUTES.append({"route" : route, "type": type, "get" : get, "post" : post})
 
 def register(ELMO_HOSTNAME,ELMO_HOSTPORT):
-	routes = 'ip%s&port%s' % (ELMO_IP, ELMO_PORT)
-	for ELMO_ROUTE in ELMO_ROUTES:
-		routes += '&routes=' + urllib.quote(ELMO_ROUTE["route"])
-	headers = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
-	conn = httplib.HTTPConnection("%s:%s" % (ELMO_HOSTNAME, ELMO_HOSTPORT))
+	data = []
+	for route in ELMO_ROUTES:
+		data.append({"route" : "http://%s:%s/%s" % (ELMO_IP, ELMO_PORT, route.route), "type" : route.type})
+	headers = {"Content-type": "application/json","Accept": "text/plain"}
+	conn = httplib.HTTPConnection(json.dumps(data))
 	conn.request("POST", "", routes, headers)
 	response = conn.getresponse()
 	print response.status, response.reason

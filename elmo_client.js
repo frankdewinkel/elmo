@@ -4,18 +4,19 @@
 var http = require('http');
 var querystring = require('querystring');
 
-var ELMO_IP 	= '192.168.2.11';
+var ELMO_IP 	= 'localhost';
 var ELMO_PORT 	= 3333;
 var ELMO_ROUTES = [];
 
 /*
  * Add an ELMO task
  */
-exports.add = function(route,get,post) {
+exports.add = function(route,type,get,post) {
 
 	ELMO_ROUTES.push({
 			
 		route : route,
+		type : type,
 		get : get,
 		post : post
 		
@@ -30,16 +31,18 @@ exports.register = function(ELMO_HOSTNAME, ELMO_HOSTIP) {
 	
 	var routes = [];
 	for(i=0;i<ELMO_ROUTES.length;i++) {
-		routes.push(ELMO_ROUTES[i].route);
+		routes.push({
+			route : 'http://'+ELMO_IP+':'+ELMO_PORT+'/'+ELMO_ROUTES[i].route, 
+			type : ELMO_ROUTES[i].type
+		});
 	}
-	
-	var data = querystring.stringify({ip : ELMO_IP, port : ELMO_PORT, routes : routes});
+	var data = JSON.stringify(routes);
 	var options = {
 		host: 	ELMO_HOSTNAME,
 		port: 	ELMO_HOSTIP,
 		path: 	'/',
 		method: 'POST',
-		headers: {'Content-Type': 'application/x-www-form-urlencoded','Content-Length': Buffer.byteLength(data)}
+		headers: {'Content-Type': 'application/json','Content-Length': Buffer.byteLength(data)}
 	};
 	var req = http.request(options, function(res) {
 		console.log('Server responded');		

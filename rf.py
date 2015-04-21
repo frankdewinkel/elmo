@@ -16,6 +16,6 @@ def setLamp1():
 	lampOn1 = not lampOn1
 	return 'Staat: %s<form method="post"><input type="submit" value="Schakelen" /></form>' % (lampOn1)
 
-elmo_client.add('woonkamer/lamp1',getLamp1,setLamp1)
-elmo_client.register('192.168.2.11',3000)
+elmo_client.add('woonkamer/lamp1','lamp',getLamp1,setLamp1)
+elmo_client.register('localhost',3000)
 elmo_client.start()
